@@ -1,4 +1,4 @@
-#!/bin/env python3
+#!/usr/bin/env python3
 
 """
 discogs.py
@@ -20,8 +20,9 @@ with open('input.csv', newline='') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
         print(row['album'], row['artist'])
-
-        search_str='https://api.discogs.com/database/search?release_title=revolver&artist=beatles&per_page=1&page=1'
+        # this search string works yay keeeeeep it
+        # search_str='https://api.discogs.com/database/search?release_title=' +row['album'] +'&artist=' +row['artist'] +'&per_page=1&page=1'
+        search_str='https://api.discogs.com/database/search?release_title=' +row['album'] +'&artist=' +row['artist'] +'&per_page=1&page=1'
 
         print(search_str)
 

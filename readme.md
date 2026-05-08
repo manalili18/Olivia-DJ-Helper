@@ -10,3 +10,5 @@ which means we should probably unpack it to into like excel or something, but ma
 lmao hows that for a project definition
 
 anyway, wassup im back love <3
+found a possible music api to use: getsongbpm.com
+

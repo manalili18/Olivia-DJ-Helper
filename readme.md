@@ -12,7 +12,8 @@ lmao hows that for a project definition
 
 anyway, wassup im back, love <3
 
-found an api to use for this project: getsongbpm.com
+found an api to use for this project:
+[GetSongBPM](https://www.getsongbpm.com)
 
 they seem super cool, and have everything that i need to catalog my girlfriend's record collection so she can DJ a lil easier.
 

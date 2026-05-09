@@ -11,7 +11,7 @@ output json with all pertintent info
 
 """
 
-import requests, csv, time
+import requests, csv, time, json
 
 from api_keys import headers, discogs_url
 
@@ -54,11 +54,13 @@ with open('input.csv', newline='') as csvfile:
             genres=release_dict['genres']
             styles=release_dict['styles']
         except json.decoder.JSONDecodeError:
-            error_f.write(release_str)
-            error_f.write('\n')
+            with open('errors.txt','a') as error_f:
+                error_f.write(release_str)
+                error_f.write('\n')
         except KeyError:
-            error_f.write(release_str)
-            error_f.write('\n')
+            with open('errors.txt','a') as error_f:
+                error_f.write(release_str)
+                error_f.write('\n')
 
         # print(genres,styles) 
 

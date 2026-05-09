@@ -18,3 +18,4 @@ found an api to use for this project:
 they seem super cool, and have everything that i need to catalog my girlfriend's record collection so she can DJ a lil easier.
 
 
+hey uhh TODO make the #! headers portable 

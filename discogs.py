@@ -11,10 +11,14 @@ output json with all pertintent info
 
 """
 
-import requests, csv, time, json
+import requests, csv, time, json, datetime
 
 from api_keys import headers, discogs_url
 
+hourmin_now=datetime.datetime.now().strftime('%H%M')
+
+output_csv='output.discogs.'+hourmin_now+'.csv'
+err_txt='errors.'+hourmin_now+'.txt'
 
 with open('input.csv', newline='') as csvfile:
     reader = csv.DictReader(csvfile)
@@ -22,7 +26,7 @@ with open('input.csv', newline='') as csvfile:
 
         album=row['album']
         artist=row['artist']
-        year=row['year']
+        # year=row['year']
 
         # search_str='https://api.discogs.com/database/search?release_title='+album+'&artist='+artist+'&year='+year+'&format=Vinyl&per_page=1&page=1'
         search_str='https://api.discogs.com/database/search?release_title='+album+'&artist='+artist+'&format=Vinyl&per_page=1&page=1'
@@ -46,10 +50,11 @@ with open('input.csv', newline='') as csvfile:
         try:
             id_str = str(search_dict["results"][0]["id"])
         except IndexError:
-            with open('errors.txt','a') as error_f:
+            with open(err_txt,'a') as error_f:
                 error_f.write(album+artist+':maybe no results:')
                 error_f.write(search_str)
                 error_f.write('\n')
+            print('aww rats!')
 
         
         # print(id)
@@ -61,7 +66,8 @@ with open('input.csv', newline='') as csvfile:
         try:
             release_dict=response.json()
         except json.decoder.JSONDecodeError:
-            with open('errors.txt','a') as error_f:
+            print('aww rats!')
+            with open(err_txt,'a') as error_f:
                 error_f.write(album+artist+':json fail:')
                 error_f.write(release_str)
                 error_f.write('\n')
@@ -69,7 +75,8 @@ with open('input.csv', newline='') as csvfile:
         try:
             tracklist=release_dict['tracklist']
         except KeyError:
-            with open('errors.txt','a') as error_f:
+            print('aww rats!')
+            with open(err_txt,'a') as error_f:
                 error_f.write(album+artist+':tracklist fail:')
                 error_f.write(release_str)
                 error_f.write('\n')
@@ -77,7 +84,8 @@ with open('input.csv', newline='') as csvfile:
         try:
             genres=release_dict['genres']
         except KeyError:
-            with open('errors.txt','a') as error_f:
+            print('aww rats!')
+            with open(err_txt,'a') as error_f:
                 error_f.write(album+artist+':genres fail:')
                 error_f.write(release_str)
                 error_f.write('\n')
@@ -85,27 +93,26 @@ with open('input.csv', newline='') as csvfile:
         try:
             styles=release_dict['styles']
         except KeyError:
-            with open('errors.txt','a') as error_f:
+            print('aww rats!')
+            with open(err_txt,'a') as error_f:
                 error_f.write(release_str)
                 error_f.write('\n')
-
 
         # print(genres,styles) 
 
         for track in tracklist:
-            with open('discogs_output.csv','a') as out_f:
+            with open(output_csv,'a') as out_f:
                 position=track['position']
                 title=track['title']
                 duration=track['duration']
 
+                gensty = ','.join(genres+styles)
+
                 # artist, track, album, position, other attributes
-                seq = map(str,[artist,title,album,position,duration,genres,styles])
-                out_str = ','.join(seq)
+                seq = map(str,[artist,title,album,position,duration,gensty,search_str,release_str])
+
+                out_str = ';'.join(seq)
                 out_f.write(out_str)
                 out_f.write('\n')
 
-            # continue
-            # print(track['position'])
-            # print(track['title'])
-            # print(track['duration'])
         time.sleep(5)
